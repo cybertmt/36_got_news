@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// функция парсит rss feed и отправляет объект storage.Post в канал
 func FetchRss(link string, rPeriod int64, postChan chan<- storage.Post, errChan chan<- error) {
 	for {
 
