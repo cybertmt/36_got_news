@@ -40,7 +40,7 @@ func New(constr string) (*Storage, error) {
 	return &s, nil
 }
 
-// AddPost создает статью.
+// AddPost создает статью и проверяет, если статья с таким title уже существует
 func (s *Storage) AddPost(p storage.Post) error {
 	collection := s.Client.Database(databaseName).Collection(collectionName)
 	result := collection.FindOne(context.Background(), bson.M{"title": p.Title})
@@ -68,15 +68,15 @@ func (s *Storage) PostsNItems(p storage.Post) ([]storage.Post, error) {
 	n := p.ID
 	collection := s.Client.Database(databaseName).Collection(collectionName)
 	filter := bson.D{}
-	options := options.Find()
+	option := options.Find()
 
 	// Sort by `_id` field descending
-	options.SetSort(bson.D{{"pubtime", -1}})
+	option.SetSort(bson.D{{"pubtime", -1}})
 
 	// Limit by 10 documents only
-	options.SetLimit(int64(n))
+	option.SetLimit(int64(n))
 
-	cur, err := collection.Find(context.Background(), filter, options)
+	cur, err := collection.Find(context.Background(), filter, option)
 	if err != nil {
 		return nil, err
 	}

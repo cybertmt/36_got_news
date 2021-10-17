@@ -23,7 +23,7 @@ func New(constr string) (*Storage, error) {
 	return &s, nil
 }
 
-// AddPost создает статью.
+// AddPost создает статью и проверяет, если статья с таким title уже существует
 func (s *Storage) AddPost(p storage.Post) error {
 	rows, err := s.db.Query(context.Background(), `
 		INSERT INTO posts (title, content, pubTime, link)
